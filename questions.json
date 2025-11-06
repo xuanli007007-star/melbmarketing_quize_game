@@ -1,0 +1,20 @@
+[
+  {
+    "title": "墨尔本哪条小巷以涂鸦闻名？",
+    "correct": "Hosier Lane",
+    "wrongs": ["Hardware Lane", "Degraves Street", "Flinders Lane"],
+    "explanation": "Hosier Lane 在联邦广场旁。"
+  },
+  {
+    "title": "墨尔本公共交通卡叫？",
+    "correct": "Myki",
+    "wrongs": ["Opal", "Go Card", "Octopus"],
+    "explanation": "电车/火车/公交都用 Myki。"
+  },
+  {
+    "title": "哪个区以华人美食著称？",
+    "correct": "Box Hill",
+    "wrongs": ["St Kilda", "Docklands", "Fitzroy"],
+    "explanation": "Box Hill 是餐饮热点。"
+  }
+]
