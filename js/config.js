@@ -1,13 +1,6 @@
-{
-  "POINTS_PER_CORRECT": 10,
-  "API_BASE": "",
-  "ENDPOINTS": {
-    "ME": "/me",
-    "ADD_POINTS": "/points/add",
-    "RECORD_ANSWER": "/answers/record",
-    "TODAY_QUESTION": "/questions/today"
-  },
-  "CLAIM_URL": "#",
-  "X2_EVERY": 3,
-  "MAX_IN_LOOP": 3
+// js/config.js
+export async function loadConfig(){
+  const res = await fetch('./config.json', { cache: 'no-store' });
+  if(!res.ok) throw new Error('CONFIG_LOAD_FAILED');
+  return await res.json();
 }
