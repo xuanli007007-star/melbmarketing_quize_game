@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>墨城答题 · MelbQuiz</title>
+  <meta name="description" content="想答几题就几题，积分不断涨；每满3题下一题双倍。">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 背景层 -->
+  <div class="bg-wrap">
+    <div class="bg-grad"></div>
+    <canvas id="bg"></canvas>
+    <canvas id="fx"></canvas>
+  </div>
+
+  <main class="page">
+    <section class="hero neon">
+      <div class="brand">
+        <div class="logo">MM</div>
+        <div class="titles">
+          <h1>墨城答题 · 刷分场</h1>
+          <p class="subtitle">想答几题就几题；每满3题下一题双倍！</p>
+        </div>
+        <div class="chip" id="pointsChip">当前积分：0</div>
+      </div>
+      <div class="statbar">
+        <div class="stat" id="statAnswered">已答：0 题</div>
+        <div class="stat" id="statNext">距离双倍：3 题</div>
+        <div class="stat" id="statMulti">当前倍率：x1</div>
+      </div>
+    </section>
+
+    <section class="card" id="quizCard" aria-live="polite">
+      <div class="progress"><div id="progFill"></div></div>
+      <div class="x2banner" id="x2banner"><span class="x2badge">x2</span> 下一题双倍奖励，冲！</div>
+
+      <div class="meta">
+        <span class="badge">快速刷分模式</span>
+        <span class="muted" id="leftTime"></span>
+      </div>
+
+      <h2 id="questionText">加载题目中…</h2>
+      <div id="options" class="options"></div>
+
+      <div class="actions">
+        <button id="btnSubmit" class="btn neon" disabled>提交答案</button>
+        <button id="btnNext" class="btn-ghost hidden">下一题 →</button>
+        <button id="btnEnd" class="btn-ghost">结束本轮</button>
+      </div>
+
+      <div id="feedback" class="toast hidden"></div>
+    </section>
+
+    <footer class="footnote">
+      <p>答题越多，积分越多；商户礼品/酒水券可在领奖中心兑换。</p>
+      <p class="tiny">接上 API 后将与会员后台实时同步积分。</p>
+    </footer>
+  </main>
+
+  <!-- 奖励弹窗 -->
+  <div class="modal" id="rewardModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-title">🎉 奖励到账</div>
+      <div class="modal-body">本题获得 <b id="rewardDelta">+10</b> 分。继续刷题，下一次双倍更爽！</div>
+      <div class="modal-qr"><div class="qr">放你的<br>二维码</div></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="btnCloseModal">继续刷题</button>
+        <a class="btn" id="btnGoClaim" href="#" target="_blank" rel="noopener">去领奖中心</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
