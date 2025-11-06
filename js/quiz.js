@@ -1,6 +1,6 @@
 import { state, setPoints, lsGet, lsSet } from './state.js';
 import { apiPost } from './api.js';
-import { showResultOk, showResultErr, showNextButton, setStatsUI, openRewardModal } from './ui.js';
+import { showResultOk, showResultErr, showNextButton, setStatsUI, openRewardModal, dom } from './ui.js';
 import { ping } from './sfx.js';
 
 function apiAvailable(){ return (state.config.API_BASE||'').trim().length>0; }
@@ -64,10 +64,10 @@ export async function settleAnswer(isCorrect){
 export function endRound(){
   // 保持积分不变，仅结束当前回合UI
   alert(`🎯 本轮结束\n已答 ${state.answered} 题，累计积分 ${state.points} 分`);
-  document.getElementById('questionText').textContent = '你已结束本轮，随时可再来一局！';
-  document.getElementById('options').innerHTML = '';
-  document.getElementById('btnSubmit').disabled = true;
-  document.getElementById('btnNext').classList.add('hidden');
-  document.getElementById('btnEnd').classList.add('hidden');
-  document.getElementById('feedback').classList.add('hidden');
+  if(dom.questionText) dom.questionText.textContent = '你已结束本轮，随时可再来一局！';
+  if(dom.options) dom.options.innerHTML = '';
+  if(dom.btnSubmit) dom.btnSubmit.disabled = true;
+  dom.btnNext?.classList.add('hidden');
+  dom.btnEnd?.classList.add('hidden');
+  dom.feedback?.classList.add('hidden');
 }
