@@ -1,29 +1,31 @@
 import { loadConfig } from './config.js';
-import { state, setPoints, lsGet, shuffle } from './state.js';
-import { apiGet } from './api.js';
-import { loadLocalPool, loadRemoteToday } from './data.js';
-import { bindUI, renderQuestion, setStatsUI, closeRewardModal } from './ui.js';
+import { state, setPoints, lsGet } from './state.js';
+import { bindUI, renderQuestion, closeRewardModal } from './ui.js';
 import { initStarfield, initBurst } from './fx.js';
 import { settleAnswer, refreshMilestone, endRound } from './quiz.js';
+import { loadLocalPool } from './data.js';
 
-let nextLocalQuestion; // 本地题库“取下一题”的函数
+let nextLocalQuestion; // 取题函数
 let burst;
 
-// 初始化
 async function boot(){
-  state.config = await loadConfig();
+  state.config = await loadConfig().catch(e=>{
+    console.error('[config.json 加载失败]', e);
+    // 极端情况下也给个默认配置
+    return {
+      POINTS_PER_CORRECT: 10, API_BASE:"", ENDPOINTS:{ME:"/me",ADD_POINTS:"/points/add",RECORD_ANSWER:"/answers/record",TODAY_QUESTION:"/questions/today"},
+      CLAIM_URL:"#", X2_EVERY:3, MAX_IN_LOOP:3
+    };
+  });
+
   try{ const u = new URL(location.href); state.token = u.searchParams.get('token') || null; }catch(e){}
   setPoints(lsGet('points',0));
-  bindUI({
-    onSubmit: onSubmit,
-    onNext: onNext,
-    onEnd: endRound
-  });
+  bindUI({ onSubmit, onNext, onEnd: endRound });
 
   initStarfield();
   burst = initBurst();
 
-  // 加载题目源：如有 API_BASE 你也可改用后端；默认本地随机
+  // 题库：这里即便失败也会返回可用的兜底函数
   nextLocalQuestion = await loadLocalPool();
 
   await loadQuestion();
@@ -31,24 +33,23 @@ async function boot(){
 }
 
 async function loadQuestion(){
-  // 这里用本地随机；若你想改为远端题，可替换调用 loadRemoteToday()
-  state.current = nextLocalQuestion();
+  state.current = nextLocalQuestion ? nextLocalQuestion() : null;
+  if(!state.current){
+    // 极端兜底
+    state.current = { title:'题库为空（已启用兜底）', correct:'OK', explanation:'', options:['OK'] };
+  }
   renderQuestion(state.current);
 }
 
 async function onSubmit(){
   if(!state.selected || !state.current) return;
-  // 高亮正确/错误
   [...document.querySelectorAll('.option')].forEach(el=>{
     const v = el.querySelector('input').value;
     if(v===state.current.correct) el.classList.add('correct');
     if(v===state.selected && v!==state.current.correct) el.classList.add('wrong');
   });
   document.getElementById('btnSubmit').disabled = true;
-
-  // FX：中心爆裂
   burst.burst(innerWidth/2, innerHeight/2, 140, 1);
-
   const ok = (state.selected === state.current.correct);
   await settleAnswer(ok);
 }
