@@ -36,15 +36,37 @@ export function renderQuestion(q){
   const box = dom.options;
   if(!box) return;
 
+  state.selected = null;
   box.innerHTML = '';
-  q.options.forEach(opt=>{
+
+  q.options.forEach((opt, idx)=>{
     const el = document.createElement('label');
     el.className = 'option';
+    el.style.setProperty('--stagger', idx.toString());
     el.innerHTML = `<input type="radio" name="answer" value="${opt}" aria-label="${opt}"><span>${opt}</span>`;
+
     el.addEventListener('click',()=>{
       state.selected = opt;
+      box.querySelectorAll('.option.selected').forEach(n=>n.classList.remove('selected'));
+      el.classList.add('selected');
       if(dom.btnSubmit) dom.btnSubmit.disabled = false;
     });
+
+    el.addEventListener('pointerdown', evt=>{
+      const rect = el.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.width = ripple.style.height = `${size}px`;
+      const clientX = (evt.clientX ?? (rect.left + rect.width / 2));
+      const clientY = (evt.clientY ?? (rect.top + rect.height / 2));
+      ripple.style.left = `${clientX - rect.left - size / 2}px`;
+      ripple.style.top = `${clientY - rect.top - size / 2}px`;
+      el.querySelector('.ripple')?.remove();
+      el.appendChild(ripple);
+      setTimeout(()=>ripple.remove(), 520);
+    }, { passive: true });
+
     box.appendChild(el);
   });
 
