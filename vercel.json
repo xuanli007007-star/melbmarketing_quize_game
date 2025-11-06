@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "melb-quiz-modular",
+  "builds": [{ "src": "index.html", "use": "@vercel/static" }],
+  "routes": [
+    { "src": "/config.json", "dest": "/config.json" },
+    { "src": "/data/questions.json", "dest": "/data/questions.json" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
